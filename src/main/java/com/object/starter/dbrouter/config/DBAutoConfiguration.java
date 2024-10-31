@@ -2,7 +2,9 @@ package com.object.starter.dbrouter.config;
 
 import com.object.starter.dbrouter.DBRouterConfig;
 import com.object.starter.dbrouter.dynamic.DynamicDataSource;
+import com.object.starter.dbrouter.dynamic.DynamicDataSourcePlugin;
 import com.object.starter.dbrouter.util.PropertyUtil;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,5 +61,12 @@ public class DBAutoConfiguration implements EnvironmentAware {
     @Bean
     public DBRouterConfig dbRouterConfig(){
         return new DBRouterConfig(dbCount, tbCount);
+    }
+
+    @Bean
+    public String addInterceptor(SqlSessionFactory sqlSessionFactory){
+        DynamicDataSourcePlugin plugin = new DynamicDataSourcePlugin();
+        sqlSessionFactory.getConfiguration().addInterceptor(plugin);
+        return "";
     }
 }
