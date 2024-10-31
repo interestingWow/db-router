@@ -41,11 +41,11 @@ public class DBRouterJoinPoint {
         //获取路由的属性值是什么
         String dbKeyAttr = getAttrValue(key, joinPoint.getArgs());
         int size = dbRouterConfig.getDbCount() * dbRouterConfig.getTbCount();
-        // 扰动函数
+        // 扰动函数 0-1
         int idx = (size - 1) & (dbKeyAttr.hashCode() ^ (dbKeyAttr.hashCode() >>> 16));
-        // 库表索引
+        // 库表索引 idx 0 dbIdx 1 和tbIdx 0
         int dbIdx = idx / dbRouterConfig.getTbCount() + 1;
-        int tbIdx = idx - dbRouterConfig.getTbCount() * (dbIdx - 1);
+        int tbIdx = idx - dbRouterConfig.getTbCount() * (dbIdx - 1) + 1;
         DBContextHolder.setDBKey(String.format("%02d", dbIdx));
         DBContextHolder.setTBKey(String.format("%02d", tbIdx));
         logger.info("数据库路由 method：{} dbIdx：{} tbIdx：{}", getMethod(joinPoint).getName(), dbIdx, tbIdx);
